@@ -243,6 +243,7 @@ namespace GraphQL
         public virtual void Modify(GraphQL.Utilities.FieldConfig field) { }
         public virtual void Modify(GraphQL.Utilities.TypeConfig type) { }
         public virtual void Modify(GraphQL.Types.FieldType fieldType, bool isInputType) { }
+        public virtual void Modify(GraphQL.Types.IGraphType graphType, System.Reflection.MemberInfo memberInfo, GraphQL.Types.FieldType fieldType, bool isInputType, ref bool ignore) { }
         public virtual void Modify<TParameterType>(GraphQL.Types.ArgumentInformation argumentInformation) { }
         public virtual bool ShouldInclude(System.Reflection.MemberInfo memberInfo, bool? isInputType) { }
     }
@@ -608,6 +609,11 @@ namespace GraphQL
         public void Remove(TKey key) { }
         public bool TryRetrieve(TKey key, out TValue? value) { }
         public void WithValue(TKey key, System.Action<TValue> action) { }
+    }
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple=false, Inherited=true)]
+    public sealed class MapAutoClrTypeAttribute : System.Attribute
+    {
+        public MapAutoClrTypeAttribute() { }
     }
     public static class MemoryExtensions
     {
@@ -2010,11 +2016,21 @@ namespace GraphQL.Types
         [System.Obsolete("Please call Field<TGraphType>(string name) instead.")]
         public virtual GraphQL.Builders.FieldBuilder<TSourceType, object> Field<TGraphType>()
             where TGraphType : GraphQL.Types.IGraphType { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression) { }
         public virtual GraphQL.Builders.FieldBuilder<TSourceType, object> Field<TGraphType>(string name)
             where TGraphType : GraphQL.Types.IGraphType { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable) { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type type) { }
         public virtual GraphQL.Builders.FieldBuilder<TSourceType, TReturnType> Field<TReturnType>(string name, bool nullable = false) { }
-        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable = false, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type? type = null) { }
-        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(string name, System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable = false, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type? type = null) { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(string name, System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression) { }
+        [System.Obsolete("Please use another overload that receives only one of the \'nullable\' or \'type\' ar" +
+            "guments. This method will be removed in v9.")]
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type? type) { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(string name, System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable) { }
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(string name, System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type type) { }
+        [System.Obsolete("Please use another overload that receives only one of the \'nullable\' or \'type\' ar" +
+            "guments. This method will be removed in v9.")]
+        public virtual GraphQL.Builders.FieldBuilder<TSourceType, TProperty> Field<TProperty>(string name, System.Linq.Expressions.Expression<System.Func<TSourceType, TProperty>> expression, bool nullable, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] System.Type? type) { }
         [System.Obsolete("Please use one of the Field() methods returning FieldBuilder and the methods defi" +
             "ned on it or just use AddField() method directly. This method may be removed in " +
             "a future release. For now you can continue to use this API but we do not encoura" +
